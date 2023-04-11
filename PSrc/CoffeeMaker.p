@@ -27,6 +27,8 @@ event eNoWaterError;
 event eNoBeansError;
 // event: the heater to warm the machine is broken!
 event eWarmerError;
+// event: the ground door is open while trying to grind beans, close it!
+event eGroundDoorOpenError;
 
 /*****************************************************
 EspressoCoffeeMaker receives requests from the control panel of the coffee machine and
@@ -50,6 +52,8 @@ machine EspressoCoffeeMaker
     on eGrindBeansReq do {
       if (!HasBeans()) {
         send controller, eNoBeansError;
+      } else if (GroundDoorOpen()) {
+        send controller, eGroundDoorOpenError;
       } else {
         send controller, eGrindBeansCompleted;
       }
@@ -73,6 +77,7 @@ machine EspressoCoffeeMaker
   // nondeterministic functions to trigger different behaviors
   fun HasBeans() : bool { return $; }
   fun HasWater() : bool { return $; }
+  fun GroundDoorOpen() : bool { return $; }
 }
 
 

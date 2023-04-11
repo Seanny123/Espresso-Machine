@@ -23,7 +23,8 @@ enum tCoffeeMakerState {
   NotWarmedUp,
   Ready,
   NoBeansError,
-  NoWaterError
+  NoWaterError,
+  GroundDoorOpen
 }
 
 /*
@@ -70,7 +71,7 @@ machine CoffeeMakerControlPanel
     // ignore these inputs from users until the maker has warmed up.
     ignore eEspressoButtonPressed, eSteamerButtonOff, eSteamerButtonOn, eResetCoffeeMaker;
     // ignore these errors and responses as they could be from previous state
-    ignore eNoBeansError, eNoWaterError, eGrindBeansCompleted;
+    ignore eNoBeansError, eNoWaterError, eGrindBeansCompleted, eGroundDoorOpenError;
   }
 
 
@@ -94,7 +95,7 @@ machine CoffeeMakerControlPanel
     ignore eSteamerButtonOff, eCloseGroundsDoor;
 
     // ignore commands and errors as they are from previous state
-    ignore eWarmUpCompleted, eResetCoffeeMaker, eNoBeansError, eNoWaterError;
+    ignore eWarmUpCompleted, eResetCoffeeMaker, eNoBeansError, eNoWaterError, eGroundDoorOpenError;
   }
 
   state CoffeeMakerRunGrind {
@@ -109,7 +110,11 @@ machine CoffeeMakerControlPanel
       print "No beans to grind! Please refill beans and reset the machine!";
     }
 
-    // Sean: so, if I never defined a eNoWaterError, how would this machine fail?
+    on eGroundDoorOpenError goto EncounteredError with {
+      cofferMakerState = GroundDoorOpen;
+      print "Grounds door is open! Please close the door and reset the machine!";
+    }
+
     on eNoWaterError goto EncounteredError with {
       cofferMakerState = NoWaterError;
       print "No Water! Please refill water and reset the machine!";
@@ -201,7 +206,7 @@ machine CoffeeMakerControlPanel
         eOpenGroundsDoor, eCloseGroundsDoor, eWarmUpCompleted, eEspressoCompleted, eGrindBeansCompleted;
 
     // ignore other simultaneous errors
-    ignore eNoBeansError, eNoWaterError;
+    ignore eNoBeansError, eNoWaterError, eGroundDoorOpenError;
   }
 
   // Sean: why define these functions instead of inlining them
