@@ -6,3 +6,4 @@ pom.xml
 *.csproj
 PCheckerOutput/
 PGenerated/
+.idea/
