@@ -47,7 +47,6 @@ observes eInWarmUpState, eInReadyState, eInBeansGrindingState, eInCoffeeBrewingS
   }
 
   state DoorOpened {
-
     on eErrorHappened goto Error;
   }
 

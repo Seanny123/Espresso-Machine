@@ -58,7 +58,6 @@ machine CoffeeMakerControlPanel
 
   state WarmUpCoffeeMaker {
     entry {
-      // inform the specification about current state of the coffee maker
       announce eInWarmUpState;
 
       BeginHeatingCoffeeMaker();
@@ -74,12 +73,8 @@ machine CoffeeMakerControlPanel
     ignore eNoBeansError, eNoWaterError, eGrindBeansCompleted, eGroundDoorOpenError;
   }
 
-
-
-
   state CoffeeMakerReady {
     entry {
-      // inform the specification about current state of the coffee maker
       announce eInReadyState;
 
       cofferMakerState = Ready;
@@ -100,11 +95,11 @@ machine CoffeeMakerControlPanel
 
   state CoffeeMakerRunGrind {
     entry {
-      // inform the specification about current state of the coffee maker
       announce eInBeansGrindingState;
 
       GrindBeans();
     }
+
     on eNoBeansError goto EncounteredError with {
       cofferMakerState = NoBeansError;
       print "No beans to grind! Please refill beans and reset the machine!";
@@ -133,11 +128,11 @@ machine CoffeeMakerControlPanel
 
   state CoffeeMakerRunEspresso {
     entry {
-      // inform the specification about current state of the coffee maker
       announce eInCoffeeBrewingState;
 
       StartEspresso();
     }
+
     on eEspressoCompleted goto CoffeeMakerReady with { send currentUser, eEspressoCompleted; }
 
     on eNoWaterError goto EncounteredError with {
@@ -189,7 +184,6 @@ machine CoffeeMakerControlPanel
 
   state EncounteredError {
     entry {
-      // inform the specification about current state of the coffee maker
       announce eErrorHappened;
 
       // send the error message to the client
@@ -197,7 +191,6 @@ machine CoffeeMakerControlPanel
     }
 
     on eResetCoffeeMaker goto WarmUpCoffeeMaker with {
-      // inform the specification about current state of the coffee maker
       announce eResetPerformed;
     }
 
