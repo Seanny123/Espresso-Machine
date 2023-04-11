@@ -25,8 +25,6 @@ event eWarmUpCompleted;
 event eNoWaterError;
 // event: no beans for coffee, refill beans!
 event eNoBeansError;
-// event: the heater to warm the machine is broken!
-event eWarmerError;
 // event: the ground door is open while trying to grind beans, close it!
 event eGroundDoorOpenError;
 
